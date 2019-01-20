@@ -1,0 +1,80 @@
+{% extends "main.html" %}
+{% block content %}
+
+            <!-- nav area start -->
+            <!-- side bar -->
+            <div class="wrapper">
+                <nav id="sidebar">
+                    <div class="sidebar-header">
+                        <h3>Categories</h3>
+                        <strong>CT</strong>
+                    </div>
+
+                    <ul class="list-unstyled components">
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-copy"></i>
+                                item with icon
+                            </a>
+                        </li>
+                        {% for c in categories %}
+                        <li>
+                            <a href="{{url_for('showCategoryItems', category = c.name)}}">
+                                {{c.name}}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                    <ul class="list-unstyled CTAs">
+                        <li>
+                            <a href="https://bootstrapious.com/tutorial/files/sidebar.zip" class="download">
+                                <i class="fab fa-2x fa-github"></i>
+                                View source
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div id="content">
+                    <div class="content-padding">
+                        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                            <div class="container-fluid">
+
+                                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                                    <i class="fas fa-align-left"></i>
+                                </button>
+                                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                    <i class="fas fa-align-justify"></i>
+                                </button>
+
+                                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                    <ul class="nav navbar-nav ml-auto">
+                                        <li class="nav-item active">
+                                            <a class="nav-link" href="#">LogIn</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
+                        <!-- nav area end -->
+
+                        <!-- banner area start -->
+                        <div class="container">
+                            <!-- show the item -->
+
+                            <div class="card">
+                              <div class="card-header">
+                                <h3>{{current_item}}</h3>
+                              </div>
+                              <div class="card-body">
+                                <h5 class="card-title">Item description</h5>
+                                <p class="card-text">{{item.description}}</p>
+                                <a href="{{url_for('editItem', item = current_item)}}" class="btn btn-success">Edit</a>
+                                <a href="{{url_for('deleteItem', item = current_item)}}" class="btn btn-danger">Delete</a>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+{% endblock %}

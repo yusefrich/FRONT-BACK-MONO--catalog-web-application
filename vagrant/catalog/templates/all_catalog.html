@@ -1,0 +1,97 @@
+{% extends "main.html" %}
+{% block content %}
+
+            <!-- nav area start -->
+            <!-- side bar -->
+            <div class="wrapper">
+                <nav id="sidebar">
+                    <div class="sidebar-header">
+                        <h3>Categories</h3>
+                        <strong>CT</strong>
+                    </div>
+
+                    <ul class="list-unstyled components">
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-copy"></i>
+                                item with icon
+                            </a>
+                        </li>
+                        {% for c in categories %}
+                        <li>
+                            <a href="{{url_for('showCategoryItems', category = c.name)}}">
+                                {{c.name}}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                    <ul class="list-unstyled CTAs">
+                        <li>
+                            <a href="https://bootstrapious.com/tutorial/files/sidebar.zip" class="download">
+                                <i class="fab fa-2x fa-github"></i>
+                                View source
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div id="content">
+                    <div class="content-padding">
+                        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                            <div class="container-fluid">
+
+                                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                                    <i class="fas fa-align-left"></i>
+                                </button>
+                                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                    <i class="fas fa-align-justify"></i>
+                                </button>
+
+                                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                    <ul class="nav navbar-nav ml-auto">
+                                        <li class="nav-item active">
+                                            <a class="nav-link" href="#">LogIn</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
+                        <!-- nav area end -->
+
+                        <!-- banner area start -->
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h1>Store here all your items catalog!</h1>
+                                    <span>This application was made using flask and python, fell free to use it and store
+                                    all your items in this catalog, you can see all the source code from this application
+                                    in the link on the left</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <img class="img-fluid" src="{{ url_for('static', filename='img/banner-img.png') }}" alt="snowboarding banner image">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid green-content-bg content-padding">
+                <div class="content-gap">
+                    <h3 class="text-light">Latest items</h3>
+                    <ul class="list-group">
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Stick
+                        <span class="badge badge-primary badge-pill">Hockey</span>
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Goggles
+                        <span class="badge badge-primary badge-pill">Snowboarding</span>
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Snowboard
+                        <span class="badge badge-primary badge-pill">Snowboarding</span>
+                      </li>
+                    </ul>
+                </div>
+            </div>
+{% endblock %}

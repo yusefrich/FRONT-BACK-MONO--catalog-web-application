@@ -1,0 +1,91 @@
+{% extends "main.html" %}
+{% block content %}
+
+            <!-- nav area start -->
+            <!-- side bar -->
+            <div class="wrapper">
+                <nav id="sidebar">
+                    <div class="sidebar-header">
+                        <h3>Categories</h3>
+                        <strong>CT</strong>
+                    </div>
+
+                    <ul class="list-unstyled components">
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-copy"></i>
+                                item with icon
+                            </a>
+                        </li>
+                        {% for c in categories %}
+                        <li>
+                            <a href="{{url_for('showCategoryItems', category = c.name)}}">
+                                {{c.name}}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                    <ul class="list-unstyled CTAs">
+                        <li>
+                            <a href="https://bootstrapious.com/tutorial/files/sidebar.zip" class="download">
+                                <i class="fab fa-2x fa-github"></i>
+                                View source
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div id="content">
+                    <div class="content-padding">
+                        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                            <div class="container-fluid">
+
+                                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                                    <i class="fas fa-align-left"></i>
+                                </button>
+                                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                    <i class="fas fa-align-justify"></i>
+                                </button>
+
+                                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                    <ul class="nav navbar-nav ml-auto">
+                                        <li class="nav-item active">
+                                            <a class="nav-link" href="#">LogIn</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
+                        <!-- nav area end -->
+
+                        <!-- banner area start -->
+                        <div class="container">
+                            <!-- list of items -->
+                            <h3>{{current_category}} items</h3>
+                            <ul class="list-group">
+                                <!-- items list -->
+
+                                {% for i in items %}
+                                    <li class="list-group-item   align-items-center">
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-12">
+                                                <a class="mr-4" href="{{url_for('showItem', category = current_category, item = i.name)}}">
+                                                        {{i.name}}
+                                                </a>
+                                            </div>
+                                            <div class="col-3 ">
+                                                <a class=" mr-4 btn btn-success" href="{{url_for('editItem', item = i.name)}}">edit</a>
+                                            </div>
+                                            <div class="col-3 " >
+                                                <a class=" mr-4 btn btn-danger" href="{{url_for('deleteItem', item = i.name)}}">delete</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+{% endblock %}
