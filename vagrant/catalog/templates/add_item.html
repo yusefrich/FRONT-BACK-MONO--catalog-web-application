@@ -58,17 +58,19 @@
                         </nav>
                         <!-- nav area end -->
 
+                        {% include "flash_error_message.html" %}
+
                         <!-- banner area start -->
                         <div class="container">
                             <!-- edit the item -->
-                            <form>
+                            <form action="{{ url_for('addItem') }}" method = 'POST'>
                               <div class="form-group">
                                 <label for="name">Name</label>
-                                <input type="name" class="form-control" id="name" placeholder="Item name">
+                                <input type="name" name='name' class="form-control" id="name" placeholder="Item name">
                               </div>
                               <div class="form-group">
                                 <label for="type">Type</label>
-                                <select class="form-control" id="type">
+                                <select class="form-control"  name='category' id="type">
                                     {% for c in categories %}
                                         <option>{{c.name}}</option>
                                     {% endfor %}
@@ -76,9 +78,7 @@
                               </div>
                               <div class="form-group">
                                 <label for="description">Description</label>
-                                <textarea class="form-control" id="description" rows="3">
-                                    add here the description.
-                                </textarea>
+                                <textarea class="form-control" name='description' id="description" rows="3" placeholder="Add here the description."></textarea>
                               </div>
                             <button type="submit" class="btn btn-danger" id="submit" type="submit">
                                 Save

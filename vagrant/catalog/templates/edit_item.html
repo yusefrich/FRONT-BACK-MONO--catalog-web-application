@@ -57,18 +57,19 @@
                             </div>
                         </nav>
                         <!-- nav area end -->
+                        {% include "flash_error_message.html" %}
 
                         <!-- banner area start -->
                         <div class="container">
                             <!-- edit the item -->
-                            <form>
+                            <form  action="{{ url_for('editItem', item=current_item.name) }}" method = 'POST'>
                               <div class="form-group">
                                 <label for="name">Name</label>
-                                <input type="name" class="form-control" id="name" placeholder="{{current_item}}">
+                                <input type="name" name='name' class="form-control" id="name" placeholder="{{current_item.name}}">
                               </div>
                               <div class="form-group">
-                                <label for="type">Type</label>
-                                <select class="form-control" id="type">
+                                <label for="category">Category</label>
+                                <select class="form-control" name='category' id="category">
                                     {% for c in categories %}
                                         <option>{{c.name}}</option>
                                     {% endfor %}
@@ -76,11 +77,11 @@
                               </div>
                               <div class="form-group">
                                 <label for="description">Description</label>
-                                <textarea class="form-control" id="description" rows="3">
-                                    {{item.description}}
+                                <textarea class="form-control" name='description' id="description" rows="3">
+                                    {{current_item.description}}
                                 </textarea>
                               </div>
-                            <button type="submit" class="btn btn-danger" id="submit" type="submit">
+                            <button class="btn btn-danger" id="submit" type="submit">
                                 Save
                             </button>
                             <a href = "{{url_for('showCatalogs')}}">

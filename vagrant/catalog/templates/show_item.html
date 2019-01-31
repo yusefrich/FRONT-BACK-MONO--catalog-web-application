@@ -64,13 +64,13 @@
 
                             <div class="card">
                               <div class="card-header">
-                                <h3>{{current_item}}</h3>
+                                <h3>{{current_item.name}}</h3>
                               </div>
                               <div class="card-body">
                                 <h5 class="card-title">Item description</h5>
-                                <p class="card-text">{{item.description}}</p>
-                                <a href="{{url_for('editItem', item = current_item)}}" class="btn btn-success">Edit</a>
-                                <a href="{{url_for('deleteItem', item = current_item)}}" class="btn btn-danger">Delete</a>
+                                <p class="card-text">{{current_item.description}}</p>
+                                <a href="{{url_for('editItem', item = current_item.name)}}" class="btn btn-success">Edit</a>
+                                <a href="{{url_for('deleteItem', item = current_item.name)}}" class="btn btn-danger">Delete</a>
                               </div>
                             </div>
                         </div>

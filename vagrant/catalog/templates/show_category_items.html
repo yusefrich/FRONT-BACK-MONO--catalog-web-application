@@ -58,10 +58,12 @@
                         </nav>
                         <!-- nav area end -->
 
+                        {% include "flash_message.html" %}
+
                         <!-- banner area start -->
                         <div class="container">
                             <!-- list of items -->
-                            <h3>{{current_category}} items</h3>
+                            <h3>{{current_category.name}} items</h3>
                             <ul class="list-group">
                                 <!-- items list -->
 
@@ -69,7 +71,7 @@
                                     <li class="list-group-item   align-items-center">
                                         <div class="row">
                                             <div class="col-md-6 col-sm-12">
-                                                <a class="mr-4" href="{{url_for('showItem', category = current_category, item = i.name)}}">
+                                                <a class="mr-4" href="{{url_for('showItem', category = current_category.name, item = i.name)}}">
                                                         {{i.name}}
                                                 </a>
                                             </div>
