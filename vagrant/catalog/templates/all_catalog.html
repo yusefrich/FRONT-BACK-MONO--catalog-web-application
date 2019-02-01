@@ -37,25 +37,7 @@
                 </nav>
                 <div id="content">
                     <div class="content-padding">
-                        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                            <div class="container-fluid">
-
-                                <button type="button" id="sidebarCollapse" class="btn btn-info">
-                                    <i class="fas fa-align-left"></i>
-                                </button>
-                                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                                    <i class="fas fa-align-justify"></i>
-                                </button>
-
-                                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                                    <ul class="nav navbar-nav ml-auto">
-                                        <li class="nav-item active">
-                                            <a class="nav-link" href="#">LogIn</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </nav>
+                        {% include "navbar.html" %}
                         <!-- nav area end -->
 
                         {% include "flash_message.html" %}
@@ -81,18 +63,14 @@
                 <div class="content-gap">
                     <h3 class="text-light">Latest items</h3>
                     <ul class="list-group">
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Stick
-                        <span class="badge badge-primary badge-pill">Hockey</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Goggles
-                        <span class="badge badge-primary badge-pill">Snowboarding</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Snowboard
-                        <span class="badge badge-primary badge-pill">Snowboarding</span>
-                      </li>
+                        {% for i in latest_items %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{{url_for('showItem', category = i.category.name, item = i.name)}}">
+                                {{i.name}}
+                            </a>
+                                <span class="badge badge-primary badge-pill">{{i.category.name}}</span>
+                        </li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>

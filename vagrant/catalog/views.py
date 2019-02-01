@@ -13,18 +13,32 @@ from sqlalchemy import create_engine, asc
 
 import json
 
+from flask import  session as login_session
+import random, string
+
 app = Flask(__name__)
 
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.bind = engine
 session = scoped_session(sessionmaker(bind=engine))
 
+latestItems = []
+
+
+# Create anti-forgery state token
+@app.route('/login')
+def showLogin():
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                    for x in xrange(32))
+    login_session['state'] = state
+    return "The current session state is %s" % login_session['state']
+
 
 @app.route('/')
 @app.route('/catalog')
 def showCatalogs():
     categories = session.query(Category).order_by(asc(Category.id))
-    return render_template('all_catalog.html', categories=categories)
+    return render_template('all_catalog.html', categories=categories, latest_items=latestItems)
 
 
 # leads to edit item if logged
@@ -43,6 +57,9 @@ def showCategoryItems(category):
 def showItem(category, item):
     categories = session.query(Category).order_by(asc(Category.id))
     current_item = session.query(Item).filter_by(name=item).one()
+    latestItems.append(current_item)
+    if len(latestItems) > 3:
+        latestItems.pop(0)
     return render_template('show_item.html', categories=categories, current_item=current_item)
 
 
@@ -120,7 +137,15 @@ def addItem():
 
 @app.route('/catalog.json')
 def showJson():
-    return "this is the json of all the catalog items"
+    categories = session.query(Category).order_by(asc(Category.id))
+    category_dict = [c.serialize for c in categories]
+    for c in range(len(category_dict)):
+        items = [i.serialize for i in session.query(Item)\
+                    .filter_by(category_id=category_dict[c]["id"]).all()]
+        if items:
+            category_dict[c]["Item"] = items
+
+    return jsonify(categories=category_dict)
 
 
 if __name__ == '__main__':
