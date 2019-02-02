@@ -65,10 +65,10 @@
                     <ul class="list-group">
                         {% for i in latest_items %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <a href="{{url_for('showItem', category = i.category.name, item = i.name)}}">
+                            <a href="{{url_for('showItem', category = i.name, item = i.name)}}">
                                 {{i.name}}
                             </a>
-                                <span class="badge badge-primary badge-pill">{{i.category.name}}</span>
+                                <span class="badge badge-primary badge-pill">{{i.category}}</span>
                         </li>
                         {% endfor %}
                     </ul>

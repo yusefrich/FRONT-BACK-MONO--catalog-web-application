@@ -105,3 +105,22 @@ body{
 .footer-area h2{
   margin: 0px !important;
 }
+/*login*/
+.custom-parallax {
+  /* The image used */
+  background-image: url("img/surf.jpeg");
+
+  /* Set a specific height */
+  height: 500px;
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.full-size{
+  width: 100%;
+  height: 100%;
+}
+

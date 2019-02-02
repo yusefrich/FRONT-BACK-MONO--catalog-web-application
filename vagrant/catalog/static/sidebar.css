@@ -73,6 +73,10 @@ span {
     max-width: 80px;
     text-align: center;
 }
+.mobile-active {
+    min-width: 245px !important;
+    max-width: 245px !important;
+}
 
 #sidebar.active .sidebar-header h3,
 #sidebar.active .CTAs {

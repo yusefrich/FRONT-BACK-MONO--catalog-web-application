@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Catalog Application Example</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <!--
+    <link rel="stylesheet" href="../static/main.css">
+    <link rel="stylesheet" href="../static/sidebar.css">
+     -->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='main.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='sidebar.css') }}">
+
+
+      <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+
+    <script src="//apis.google.com/js/platform.js?onload=start"> </script>
+
+    <!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
+</head>
+<body class="cat-body">
+<div class="body-wrap-top-icon">
+    <section class="home-link-area">
+        <a href="{{url_for('showCatalogs')}}">
+
+        <div class="container d-flex justify-content-center">
+            <i class=" pt-4 pb-4 text-light fas fa-2x fa-home"></i>
+        </div>
+        </a>
+    </section>
+
+    <section class="add-item-link-area border-shadow">
+        <a href="{{url_for('addItem')}}">
+            <div class="container d-flex justify-content-center add-item-top">
+                <i class=" pt-4 pb-4 text-light fas fa-2x fa-plus"></i> <h5 class="text-light">add item</h5>
+            </div>
+        </a>
+    </section>
+
+</div>
+
+<div class="body-wrap">
+
+    <section class="catalog-items-area">
+        <div class="container-fluid no-padding">
+
+            <!-- side bar -->
+            <div class="wrapper">
+                <nav id="sidebar" class="active mobile-active">
+                    <div class="sidebar-header">
+                        <h3>Categories</h3>
+                        <strong>LOGIN</strong>
+                    </div>
+
+                    <ul class="list-unstyled components">
+                        <li>
+                          <div id="signinButton">
+                          <span class="g-signin"
+                            data-scope="openid email"
+                            data-clientid={{client_id}}
+                            data-redirecturi="postmessage"
+                            data-accesstype="offline"
+                            data-cookiepolicy="single_host_origin"
+                            data-callback="signInCallback"
+                            data-approvalprompt="force">
+                          </span>
+                    <!-- nav area start -->
+                </div>
+                        </li>
+                    </ul>
+
+                    <ul class="list-unstyled CTAs">
+                        <li>
+                            <a href="https://bootstrapious.com/tutorial/files/sidebar.zip" class="download">
+                                <i class="fab fa-2x fa-github"></i>
+                                View source
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div id="content" class="custom-parallax" >
+                        <div class="content-padding">
+                            <!-- nav area end -->
+
+                            {% include "flash_message.html" %}
+
+                            <!-- banner area start -->
+                            <div id="result"></div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% include "footer.html" %}
+
+
+<script>
+function signInCallback(authResult) {
+    if (authResult['code']) {
+    // Hide the sign-in button now that the user is authorized
+    $('#signinButton').attr('style', 'display: none');
+    // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
+    $.ajax({
+      type: 'POST',
+      url: '/gconnect?state={{STATE}}',
+      processData: false,
+      data: authResult['code'],
+      contentType: 'application/octet-stream; charset=utf-8',
+      success: function(result) {
+        // Handle or verify the server response if necessary.
+        if (result) {
+          $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+         setTimeout(function() {
+          window.location.href = "/catalog";
+         }, 4000);
+
+      } else if (authResult['error']) {
+    console.log('There was an error: ' + authResult['error']);
+  } else {
+        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+         }
+      }
+
+  }); } }
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+
+<!-- parallax start -->
+<script src="{{ url_for('static', filename='parallax.js') }}"></script>
+
+<!-- parallax end -->
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+    </script>
+
+</body>
+</html>
