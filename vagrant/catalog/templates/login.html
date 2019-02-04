@@ -48,12 +48,19 @@
 
     <section class="catalog-items-area">
         <div class="container-fluid no-padding">
+            <div class="dark-background content-padding">
+                <!-- nav area end -->
 
+                {% include "flash_message.html" %}
+
+                <!-- banner area start -->
+                <div id="result"></div>
+            </div>
             <!-- side bar -->
             <div class="wrapper">
                 <nav id="sidebar" class="active mobile-active">
                     <div class="sidebar-header">
-                        <h3>Categories</h3>
+                        <h3>LOGIN</h3>
                         <strong>LOGIN</strong>
                     </div>
 
@@ -84,14 +91,6 @@
                     </ul>
                 </nav>
                 <div id="content" class="custom-parallax" >
-                        <div class="content-padding">
-                            <!-- nav area end -->
-
-                            {% include "flash_message.html" %}
-
-                            <!-- banner area start -->
-                            <div id="result"></div>
-                        </div>
                 </div>
             </div>
         </div>
@@ -115,7 +114,7 @@ function signInCallback(authResult) {
       success: function(result) {
         // Handle or verify the server response if necessary.
         if (result) {
-          $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+          $('#result').html(result );
          setTimeout(function() {
           window.location.href = "/catalog";
          }, 4000);

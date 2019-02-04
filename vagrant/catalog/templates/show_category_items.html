@@ -11,12 +11,6 @@
                     </div>
 
                     <ul class="list-unstyled components">
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-copy"></i>
-                                item with icon
-                            </a>
-                        </li>
                         {% for c in categories %}
                         <li>
                             <a href="{{url_for('showCategoryItems', category = c.name)}}">
@@ -28,7 +22,7 @@
 
                     <ul class="list-unstyled CTAs">
                         <li>
-                            <a href="https://bootstrapious.com/tutorial/files/sidebar.zip" class="download">
+                            <a href="https://github.com/yusefrich/PT--WP--UP--catalog-web-application" target="_blank" class="download">
                                 <i class="fab fa-2x fa-github"></i>
                                 View source
                             </a>
@@ -54,11 +48,10 @@
                                         <div class="row">
                                             <div class="col-md-6 col-sm-12">
                                                 <a class="mr-4" href="{{url_for('showItem', category = current_category.name, item = i.name)}}">
-                                                        {{i.name}} created by: {{i.user_id}}
+                                                        {{i.name}}
                                                 </a>
                                             </div>
-                                            {%if 'username' in sessions %}
-                                                {%if 'gplus_id' == i.user_id%}
+                                                {%if logged_user == i.user_id%}
                                                 <div class="col-3 ">
                                                     <a class=" mr-4 btn btn-success" href="{{url_for('editItem', item = i.name)}}">edit</a>
                                                 </div>
@@ -66,7 +59,6 @@
                                                     <a class=" mr-4 btn btn-danger" href="{{url_for('deleteItem', item = i.name)}}">delete</a>
                                                 </div>
                                                 {%endif%}
-                                            {%endif%}
                                         </div>
                                     </li>
                                 {% endfor %}
