@@ -1,8 +1,7 @@
 
-# Back end python and psql
+# web applicartion for saving sport items
 
-Source code for a backend server made with python
-and psql, this is a repo for studies and consultation purpose
+Source code for the web application created with flask and sqlalquemy, the server saves sport items for later use.
 
 ## Getting Started
 

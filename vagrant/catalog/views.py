@@ -31,6 +31,7 @@ latestItems = []
 # gconnect route
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+    """ connect the user using google accounts"""
     # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -133,6 +134,8 @@ def gconnect():
 
 @app.route('/gdisconnect')
 def gdisconnect():
+    """disconnect the user from the google acoount, but only if
+    the user is current logged"""
     # Only disconnect a connected user.
     access_token = login_session.get('access_token')
     if access_token is None:
@@ -157,6 +160,8 @@ def gdisconnect():
 # Disconnect based on provider
 @app.route('/disconnect')
 def disconnect():
+    """disconnects the user for the current section for multiple oauth
+    servers"""
     if 'provider' in login_session:
         if login_session['provider'] == 'google':
             gdisconnect()
@@ -175,6 +180,7 @@ def disconnect():
 
 
 def createUser(login_session):
+    """create the user in local database using the google account data"""
     newUser = User(name=login_session['username'], email=login_session[
         'email'], picture=login_session['picture'])
     session.add(newUser)
@@ -184,11 +190,13 @@ def createUser(login_session):
 
 
 def getUserInfo(user_id):
+    """easy handler to get the user info using its id"""
     user = session.query(User).filter_by(id=user_id).one()
     return user
 
 
 def getUserID(email):
+    """easy handler to get the user id using its email"""
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
@@ -199,7 +207,8 @@ def getUserID(email):
 # Create anti-forgery state token
 @app.route('/login')
 def showLogin():
-    login_session
+    """route to get to the login page, the user here can  connect in
+    the server using its google account"""
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
@@ -209,6 +218,7 @@ def showLogin():
 @app.route('/')
 @app.route('/catalog')
 def showCatalogs():
+    """route for the main page, the index page, of the application"""
     categories = session.query(Category).order_by(asc(Category.id))
     return render_template('all_catalog.html', categories=categories,
                            latest_items=latestItems)
@@ -218,6 +228,7 @@ def showCatalogs():
 # leads to delete item if logged
 @app.route('/catalog/<path:category>/items')
 def showCategoryItems(category):
+    """route for showing all the items in the current category """
     categories = session.query(Category).order_by(asc(Category.id))
     category = session.query(Category).filter_by(name=category).one()
     items = session.query(Item).filter_by(category_id=category.id).all()
@@ -233,14 +244,24 @@ def showCategoryItems(category):
 # leads to delete item if logged
 @app.route('/catalog/<path:category>/<path:item>')
 def showItem(category, item):
+    """route fot showing the current selected item"""
     categories = session.query(Category).order_by(asc(Category.id))
     current_item = session.query(Item).filter_by(name=item).one()
+
+    # addin the current shown item to the last view items
     viewedItem = {"name": current_item.name,
                   "category": current_item.category.name}
     latestItems.append(viewedItem)
+
+    # deleting the last item of the list if the list is to big to show
     if len(latestItems) > 3:
         latestItems.pop(0)
+
+    # getting the current user id and sending the the template
+    # the template gets the current user, comparing to check if its the owner
+    # setting the current logged user to a non existing id
     logged_user = -1
+    # if theres a logged user, set that the the logged_user variable
     if 'user_id' in login_session:
         logged_user = login_session['user_id']
     return render_template('show_item.html', categories=categories,
@@ -250,24 +271,32 @@ def showItem(category, item):
 # needs to be loged
 @app.route('/catalog/<path:item>/edit', methods=['GET', 'POST'])
 def editItem(item):
+    """route for editing a item"""
+    # checks if user is logged in
     if 'username' not in login_session:
         return redirect('/login')
     categories = session.query(Category).order_by(asc(Category.id))
     editedItem = session.query(Item).filter_by(name=item).one()
+    # checks if the current logged user is the creator of that item
     if login_session['user_id'] != editedItem.user_id:
         flash("You are not authorized to edit this item ")
         return redirect(
             url_for('showCategoryItems', category=editedItem.category.name))
     if request.method == 'POST':
+
         # check if item already exists
         try:
             itemAlreadyExists = session.query(Item).filter_by(
                 name=request.form['name']).one()
         except:
             itemAlreadyExists = None
+
+        # returning error if item name already in use and redirecting the user
         if itemAlreadyExists:
             flash("this item name already exists")
             return redirect(url_for('editItem', item=editedItem.name))
+
+        # getting the new item data
         if request.form['name']:
             editedItem.name = request.form['name']
         if request.form['category']:
@@ -289,13 +318,21 @@ def editItem(item):
 # needs to be loged
 @app.route('/catalog/<path:item>/delete', methods=['GET', 'POST'])
 def deleteItem(item):
+    """route for deleting the current item"""
     if 'username' not in login_session:
         return redirect('/login')
 
     categories = session.query(Category).order_by(asc(Category.id))
     itemToDelete = session.query(Item).filter_by(name=item).one()
+    # getting the reference to the item category to redirect to
     category = session.query(Category).filter_by(
         name=itemToDelete.category.name).one()
+    # checks if the current logged user is the creator of that item
+    if login_session['user_id'] != itemToDelete.user_id:
+        flash("You are not authorized to delete this item ")
+        return redirect(
+            url_for('showCategoryItems', category=category.name))
+
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
@@ -309,21 +346,24 @@ def deleteItem(item):
 # needs to be loged
 @app.route('/catalog/add', methods=['GET', 'POST'])
 def addItem():
+    """route for adding a new item to the database"""
     if 'username' not in login_session:
         return redirect('/login')
 
     categories = session.query(Category).order_by(asc(Category.id))
     newItemDescription = "Item has no description"
     if request.method == 'POST':
+        # check if item name already exists using name as query
         try:
             itemAlreadyExists = session.query(Item).filter_by(
                 name=request.form['name']).one()
         except:
             itemAlreadyExists = None
-
+        # return a error if the item already exists
         if itemAlreadyExists:
             flash("this item name already exists")
             return redirect(url_for('addItem'))
+        # get te form to edit that item
         newItemName = request.form['name']
         newItemCategory = session.query(Category).filter_by(
             name=request.form['category']).one()
@@ -341,8 +381,10 @@ def addItem():
         return render_template('add_item.html', categories=categories)
 
 
+# show all the database data in a json endpoint
 @app.route('/catalog.json')
 def showJson():
+    """"route for showing the entire database as a json endpoint"""
     categories = session.query(Category).order_by(asc(Category.id))
     category_dict = [c.serialize for c in categories]
     for c in range(len(category_dict)):
@@ -350,8 +392,32 @@ def showJson():
             Item).filter_by(category_id=category_dict[c]["id"]).all()]
         if items:
             category_dict[c]["Item"] = items
-
     return jsonify(categories=category_dict)
+
+
+# lists all the categories in a json endpoint
+@app.route('/categories.json')
+def showCategoryJson():
+    """json endpoint route for showing all the categories in the database"""
+    categories = session.query(Category).all()
+    return jsonify(Categories=[category.serialize for category in categories])
+
+
+# list of all the item in a category
+@app.route('/catalog/<path:category>/items.json')
+def showCategoryItemsJson(category):
+    """json endpoint route for showing all the items in that category"""
+    myCategory = session.query(Category).filter_by(name=category).one()
+    items = session.query(Item).filter_by(category=myCategory).all()
+    return jsonify(Items=[item.serialize for item in items])
+
+
+# single item json
+@app.route('/catalog/<path:category>/<path:item>.json')
+def showItemJson(category, item):
+    """json endpoint route for showing the data for the current item only"""
+    item = session.query(Item).filter_by(name=item).one()
+    return jsonify(Item=item.serialize)
 
 
 if __name__ == '__main__':
