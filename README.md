@@ -30,7 +30,7 @@ donwload on virtualbox.org/wiki/Downloads
 * clone this repository or download
 
 ```
-git clone https://github.com/yusefrich/UP--log-analysis-udacity.git
+git clone https://github.com/yusefrich/PT--WP--UP--catalog-web-application.git
 ```
 * Run vagrant up to start the vm with the virtual box
 
